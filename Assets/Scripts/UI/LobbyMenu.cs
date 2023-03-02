@@ -18,27 +18,27 @@ public class LobbyMenu : MonoBehaviour
 {
     [SerializeField] private TMP_Text _joinCodeText;
     [SerializeField] private TMP_InputField _joinCodeInputField;
-    [SerializeField] private GameObject _button;
+    // [SerializeField] private GameObject _button;
 
     private UnityTransport _transport;
     private const int MaxPlayers = 2;
 
-    private async void Awake()
-    {
-        _transport = GetComponent<UnityTransport>();
-        _button.SetActive(false);
-        await Authenticate();
-        _button.SetActive(true);
-    }
     private static async Task Authenticate()
     {
         await UnityServices.InitializeAsync();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
+        private async void Awake()
+    {
+        _transport = FindObjectOfType<UnityTransport>();
+        // _button.SetActive(false);
+        await Authenticate();
+        // _button.SetActive(true);
+    }
 
     public async void CreateGame()
     {
-        _button.SetActive(false);
+        // _button.SetActive(false);
 
         Allocation a = await RelayService.Instance.CreateAllocationAsync(MaxPlayers);
         _joinCodeText.text = await RelayService.Instance.GetJoinCodeAsync(a.AllocationId);
@@ -51,7 +51,7 @@ public class LobbyMenu : MonoBehaviour
 
     public async void JoinGame()
     {
-        _button.SetActive(false);
+        // _button.SetActive(false);
 
         JoinAllocation a = await RelayService.Instance.JoinAllocationAsync(_joinCodeInputField.text);
         _transport.SetClientRelayData(a.RelayServer.IpV4, 
